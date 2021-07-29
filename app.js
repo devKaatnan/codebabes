@@ -4,18 +4,27 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const exphbs = require('express-handlebars');
 
-
+const port = 3000;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var valuesRouter = require('./routes/index')
+var valuesRouter = require('./routes/index');
+var eigenRouter = require('./routes/index');
+var determinantRouter = require('./routes/index');
+
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+app.engine('hbs', exphbs({
+    defaultLayout: 'main',
+    extname: '.hbs'
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,6 +35,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/values', valuesRouter);
 app.use('/users', usersRouter);
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,3 +56,7 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
